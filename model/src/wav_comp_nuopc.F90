@@ -1663,7 +1663,23 @@ contains
     fnmpre = './'
 
     call ESMF_LogWrite(trim(subname)//' call read_shel_config', ESMF_LOGMSG_INFO)
-    call read_shel_config(mpi_comm, mds, time0_overwrite=time0, timen_overwrite=timen)
+    
+
+  ! Added attribute for restart time0/timeN overwrite option
+    call NUOPC_CompAttributeGet(gcomp, name='overwrite_protect', value=cvalue, isPresent=isPresent, isSet=isSet, rc=rc)
+    if (ChkErr(rc,__LINE__,u_FILE_u)) return
+    if (isPresent .and. isSet) then
+      use_overwrite_protect=(trim(cvalue)=="true")
+    end if
+    
+    write(logmsg,'(A,l)') trim(subname)//': time0/timeN overwrite is protected',use_overwrite_protect
+
+    if (use_overwrite_protect) then
+      call read_shel_config(mpi_comm, mds) 
+    else
+      call read_shel_config(mpi_comm, mds, time0_overwrite=time0, timen_overwrite=timen)
+    end if
+    !call read_shel_config(mpi_comm, mds, time0_overwrite=time0, timen_overwrite=timen)
 
     call ESMF_LogWrite(trim(subname)//' call w3init', ESMF_LOGMSG_INFO)
     call w3init ( 1, .false., 'ww3', mds, ntrace, odat, flgrd, flgr2, flgd, flg2, &
