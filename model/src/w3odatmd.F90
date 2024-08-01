@@ -563,6 +563,7 @@ MODULE W3ODATMD
                                                      !! if runtype is startup or branch run, then initfile is used
   logical            :: use_user_histname = .false.  !<@public logical flag for user set history filenames
   logical            :: use_user_restname = .false.  !<@public logical flag for user set restart filenames
+  logical            :: use_overwrite_protect = .false.  !<@public logical flag for protecting time0/timeN overwrite
   character(len=512) :: user_histfname = ''          !<@public user history filename prefix, timestring
                                                      !! YYYY-MM-DD-SSSSS will be appended
   character(len=512) :: user_restfname = ''          !<@public user restart filename prefix, timestring
