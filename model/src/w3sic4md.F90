@@ -89,6 +89,7 @@ MODULE W3SIC4MD
   !        *** Rogers et al. tech. rep. 2021 (RYW2021)
   !        *** Yu et al. CRST 2022
   !        *** Yu JMSE 2022
+  !        *** Meylan et al. Ocean Modeling 2021
   !
   !  6. Switches :
   !
@@ -138,6 +139,7 @@ CONTAINS
     !/    11-Jan-2024 : Method 8 added (Meylan et al. 2018)   (E. Rogers)
     !/    11-Jan-2024 : Method 9 added (Rogers et al., 2021)
     !/                                      denoted "RYW2021" (E. Rogers)
+    !/    14-Aug-2024 : Method 10 added (Meylan et al. 2021)  (E. Thomas)
     !/
     !/        FIXME   : Move field input to W3SRCE and provide
     !/     (S.Zieger)   input parameter to W3SIC1 to make the subroutine
@@ -307,6 +309,8 @@ CONTAINS
     !        suggested default is marked with "(*SD*)", for consistency
     !          with SWAN (v41.31AB or later)
     !
+    !     10) Meylan et al. 2021 (Ocean Modeling): ocean-wave attenuation 
+    !         due to scattering by sea ice floes. 
     !     ------------------------------------------------------------------
     !
     !     For all methods, the user can specify namelist
