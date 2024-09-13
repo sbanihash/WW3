@@ -44,7 +44,7 @@ module wav_comp_nuopc
   use wav_shr_mod           , only : wav_coupling_to_cice, nwav_elev_spectrum
   use wav_shr_mod           , only : merge_import, dbug_flag
   use w3odatmd              , only : nds, iaproc, napout
-  use w3odatmd              , only : runtype, use_user_histname, user_histfname, use_user_restname, user_restfname
+  use w3odatmd              , only : runtype, use_user_histname, user_histfname, use_user_restname, user_restfname, use_overwrite_protect
   use w3odatmd              , only : user_netcdf_grdout
   use w3odatmd              , only : time_origin, calendar_name, elapsed_secs
   use wav_shr_mod           , only : casename, multigrid, inst_suffix, inst_index, unstr_mesh
@@ -1642,7 +1642,7 @@ contains
     if (isPresent .and. isSet) then
       use_user_restname=(trim(cvalue)=="true")
     end if
-    write(logmsg,'(A,l)') trim(subname)//': Custom restart names in use ',use_user_restname
+    write(logmsg,'(A,l)') trim(subname)//': Custom restart names in use',use_user_restname
     call ESMF_LogWrite(trim(logmsg), ESMF_LOGMSG_INFO)
 
     call NUOPC_CompAttributeGet(gcomp, name='gridded_netcdfout', value=cvalue, isPresent=isPresent, isSet=isSet, rc=rc)
@@ -1663,7 +1663,23 @@ contains
     fnmpre = './'
 
     call ESMF_LogWrite(trim(subname)//' call read_shel_config', ESMF_LOGMSG_INFO)
-    call read_shel_config(mpi_comm, mds, time0_overwrite=time0, timen_overwrite=timen)
+    
+
+  ! Added attribute for restart time0/timeN overwrite option
+    call NUOPC_CompAttributeGet(gcomp, name='overwrite_protect', value=cvalue, isPresent=isPresent, isSet=isSet, rc=rc)
+    
+    if (ChkErr(rc,__LINE__,u_FILE_u)) return
+    if (isPresent .and. isSet) then
+      use_overwrite_protect=(trim(cvalue)=="true")
+    end if
+
+    if (use_overwrite_protect) then
+            call ESMF_LogWrite(trim(subname)//':  no time0/timeN overwrite')
+            call read_shel_config(mpi_comm, mds) 
+    else
+            call ESMF_LogWrite(trim(subname)//': time0/timeN overwrite')
+            call read_shel_config(mpi_comm, mds, time0_overwrite=time0, timen_overwrite=timen)
+    end if
 
     call ESMF_LogWrite(trim(subname)//' call w3init', ESMF_LOGMSG_INFO)
     call w3init ( 1, .false., 'ww3', mds, ntrace, odat, flgrd, flgr2, flgd, flg2, &
