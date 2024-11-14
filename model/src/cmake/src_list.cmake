@@ -68,6 +68,8 @@ set(nuopc_mesh_cap_src
   wav_wrapper_mod.F90
   wav_pio_mod.F90
   wav_restart_mod.F90
+  #restart_fh
+  ${PROJECT_SOURCE_DIR}/../CDEPS-interface/ufs/cdeps_share/shr_is_restart_fh_mod.F90
   )
 
 set(esmf_multi_cap_src
