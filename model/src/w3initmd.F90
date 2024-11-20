@@ -448,7 +448,9 @@ CONTAINS
     use w3timemd,        only : set_user_timestring
     use w3odatmd,        only : runtype, restart_from_binary, use_restartnc, user_restfname
     use w3odatmd,        only : logfile_is_assigned
+#ifdef W3_PIO
     use wav_restart_mod, only : read_restart
+#endif
     !/
 #ifdef W3_MPI
     INCLUDE "mpif.h"
@@ -972,13 +974,17 @@ CONTAINS
           if (restart_from_binary) then
             call w3iors('READ', nds(6), sig(nk), imod, filename=trim(fname))
           else
+#ifdef W3_PIO                  
             call read_restart(trim(fname), va=va, mapsta=mapsta, mapst2=mapst2)
+#endif
           end if
         else
           call extcde (60, msg="required restart file " // trim(fname) // " does not exist")
         end if
       else
+#ifdef W3_PIO                  
         call read_restart('none')
+#endif
         ! mapst2 is module variable defined in read of mod_def; maptst is from 2.b above
         flcold = .true.
       end if
