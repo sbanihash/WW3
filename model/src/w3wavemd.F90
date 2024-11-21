@@ -2356,16 +2356,16 @@ CONTAINS
       !     Delay if data assimilation time.
       !
       !
+#ifdef W3_PIO      
       if (dsec21(time,tend) == 0.0) then    ! req'd in case waves are running in slow loop
+
         if (use_historync) then
           floutg = .false.
           floutg2 = .false.
           if (histwr) then
             call w3cprt (imod)
             call w3outg (va, flpfld, .true., .false. )
-#ifdef W3_PIO
             call write_history(tend)
-#endif
           end if
         end if
 
@@ -2373,12 +2373,13 @@ CONTAINS
           if (rstwr) then
             call set_user_timestring(tend,user_timestring)
             fname = trim(user_restfname)//trim(user_timestring)//'.nc'
-#ifdef W3_PIO
             call write_restart(trim(fname), va, mapsta+8*mapst2)
-#endif            
           end if
         end if
+
       end if
+#endif
+
 
       IF ( TOFRST(1)  .EQ. -1 ) THEN
         DTTST  = 1.
