@@ -961,6 +961,7 @@ CONTAINS
     ! 3.a Read restart file
     !
     VA(:,:) = 0.
+#ifdef W3_PIO
     if (use_restartnc) then
       if (runtype == 'continue' )then
         call set_user_timestring(time,user_timestring)
@@ -974,21 +975,19 @@ CONTAINS
           if (restart_from_binary) then
             call w3iors('READ', nds(6), sig(nk), imod, filename=trim(fname))
           else
-#ifdef W3_PIO                  
             call read_restart(trim(fname), va=va, mapsta=mapsta, mapst2=mapst2)
-#endif
           end if
         else
           call extcde (60, msg="required restart file " // trim(fname) // " does not exist")
         end if
       else
-#ifdef W3_PIO                  
         call read_restart('none')
-#endif
         ! mapst2 is module variable defined in read of mod_def; maptst is from 2.b above
         flcold = .true.
       end if
     else
+#endif
+
 #ifdef W3_DEBUGCOH
       CALL ALL_VA_INTEGRAL_PRINT(IMOD, "Before W3IORS call", 1)
 #endif
@@ -1022,7 +1021,9 @@ CONTAINS
 #ifdef W3_TIMINGS
       CALL PRINT_MY_TIME("After restart inits")
 #endif
+#ifdef W3_PIO
     end if ! if (use_restartnc)
+#endif
     !
     ! 3.b Compare MAPSTA from grid and restart
     !
