@@ -789,7 +789,7 @@ PROGRAM W3GRIB
   ! ... Set GRIB2 Data Representation Template Number (Code Table 5.0)
   !
 #ifdef W3_NCEP2
-  IDRSNUM = 2 !Complex Packing
+  IDRSNUM = 3 !Complex Packing
 #endif
   !                            clusters with Intel compiler ***
 #ifdef W3_NCEP2
@@ -808,7 +808,9 @@ PROGRAM W3GRIB
   !
 #ifdef W3_NCEP2
   IDRS    = 0
-  IDRS(3) = 2
+  IDRS(1) = 3   ! Template 5.3 (Use 1-based indexing for this library)
+  IDRS(4) = 2   ! General Group Splitting (The "Complex2" optimization)
+  IDRS(17) = 1  ! Change from 2 to 1 for 1st order spatial differencing (c2)
 #endif
   !
 #ifdef W3_T
